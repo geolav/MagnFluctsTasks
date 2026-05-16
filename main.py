@@ -4,6 +4,18 @@ from scipy.integrate import solve_ivp
 from scipy.signal import find_peaks
 import os
 
+# Создаём папку для сохранения графиков
+PLOTS_DIR = "plots"
+os.makedirs(PLOTS_DIR, exist_ok=True)
+
+
+def save_plot(filename, dpi=150):
+    """Сохраняет текущий график в папку plots"""
+    full_path = os.path.join(PLOTS_DIR, filename)
+    plt.savefig(full_path, dpi=dpi, bbox_inches='tight')
+    print(f"Сохранён график: {full_path}")
+    plt.show()
+
 
 # --------------------------------------------------------------
 # ЗАДАЧА 1: МАГНЕТРОН
@@ -59,7 +71,7 @@ def task1_magnetron():
     plt.title(f'Траектория электрона, Ic = {Ic:.3f} А')
     plt.legend()
     plt.grid()
-    plt.show()
+    save_plot('task1_trajectory.png')
 
     # Диаграмма Ic(U)
     U_range = np.linspace(50, 300, 50)
@@ -78,7 +90,7 @@ def task1_magnetron():
     plt.title('Диаграмма Ic(U) для окружности диаметром Ra-Rk')
     plt.grid()
     plt.legend()
-    plt.show()
+    save_plot('task1_Ic_vs_U.png')
 
 
 # --------------------------------------------------------------
@@ -127,7 +139,7 @@ def task2_coil():
     plt.ylabel('Магнитная индукция B, Тл')
     plt.title('Распределение B на оси катушки (I=1 А)')
     plt.grid()
-    plt.show()
+    save_plot('task2_B_vs_z.png')
 
 
 # --------------------------------------------------------------
@@ -179,7 +191,7 @@ def task3_solenoid_field():
     plt.xlim(-D_sol, D_sol)
     plt.ylim(-L_sol, L_sol)
     plt.gca().set_aspect('equal')
-    plt.show()
+    save_plot('task3_solenoid_field.png')
 
 
 # --------------------------------------------------------------
@@ -259,13 +271,13 @@ def task4_coupled_pendulums():
     axes[1, 1].set_title('Спектр сигнала φ1')
     axes[1, 1].grid()
     plt.tight_layout()
-    plt.show()
+    save_plot('task4_pendulums.png')
 
 
 # --------------------------------------------------------------
 # ЗАДАЧА 5: ФУРЬЕ-ФИЛЬТРАЦИЯ (из .npy файла)
 # --------------------------------------------------------------
-def task5_fourier_filter(filename="signal.npy"):
+def task5_fourier_filter(filename="signal_1.npy"):
     print("\n=== ЗАДАЧА 5: Фурье-фильтрация ===")
 
     if not os.path.exists(filename):
@@ -364,7 +376,7 @@ def task5_fourier_filter(filename="signal.npy"):
     plt.grid(True, alpha=0.3)
 
     plt.tight_layout()
-    plt.show()
+    save_plot('task5_filtered_signal.png')
 
     print(f"\nЧастоты полезного сигнала: {', '.join([f'{f:.1f}' for f in signal_freqs])} Гц")
     print(f"Всего найдено {len(signal_freqs)} гармоник")
@@ -376,8 +388,19 @@ def task5_fourier_filter(filename="signal.npy"):
 # ЗАПУСК ВСЕХ ЗАДАЧ
 # --------------------------------------------------------------
 if __name__ == "__main__":
+    print("=" * 50)
+    print("ЗАПУСК МОДЕЛИРОВАНИЯ ФИЗИЧЕСКИХ ЗАДАЧ")
+    print("=" * 50)
+    print(f"Графики будут сохранены в папку: {PLOTS_DIR}")
+    print()
+
     task1_magnetron()
     task2_coil()
     task3_solenoid_field()
     task4_coupled_pendulums()
     task5_fourier_filter("signal_1.npy")
+
+    print("\n" + "=" * 50)
+    print("ВСЕ ЗАДАЧИ ВЫПОЛНЕНЫ")
+    print(f"Все графики сохранены в папку: {PLOTS_DIR}")
+    print("=" * 50)
